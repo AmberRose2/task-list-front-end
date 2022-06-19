@@ -4,19 +4,22 @@ import Task from './Task';
 import './TaskList.css';
 
 const TaskList = (props) => {
-  const getTaskListJSX = (props) => {
-    return props.tasks.map((task) => {
+  const getTaskListJSX = (tasks) => {
+    return tasks.map((task) => {
       return (
         <Task
           key={task.id}
           id={task.id}
           title={task.title}
           isComplete={task.isComplete}
+          taskFinished={props.taskFinished}
         />
       );
     });
   };
-  return <ul className="tasks__list no-bullet">{getTaskListJSX}</ul>;
+  return (
+    <ul className="tasks__list no-bullet">{getTaskListJSX(props.tasks)}</ul>
+  );
 };
 
 TaskList.propTypes = {
@@ -27,6 +30,7 @@ TaskList.propTypes = {
       isComplete: PropTypes.bool.isRequired,
     })
   ).isRequired,
+  taskFinished: PropTypes.func.isRequired,
 };
 
 export default TaskList;
