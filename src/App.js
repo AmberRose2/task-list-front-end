@@ -17,7 +17,6 @@ const App = () => {
     },
   ]);
   const flipComplete = (id) => {
-    console.log('ARE WE HERE?!?!!?!');
     for (const task of tasks) {
       if (task.id === id) {
         task.isComplete = !task.isComplete;
@@ -27,13 +26,26 @@ const App = () => {
     setTasks(newTasks);
   };
 
+  const deleteTask = (id) => {
+    const newTasks = tasks.filter((task) => task.id !== id);
+    setTasks(newTasks);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
         <h1>Ada&apos;s Task List</h1>
       </header>
       <main>
-        <div>{<TaskList tasks={tasks} taskFinished={flipComplete} />}</div>
+        <div>
+          {
+            <TaskList
+              tasks={tasks}
+              taskFinished={flipComplete}
+              deleteTaskCallback={deleteTask}
+            />
+          }
+        </div>
       </main>
     </div>
   );
