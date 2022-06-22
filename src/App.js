@@ -1,34 +1,69 @@
 import React from 'react';
 import TaskList from './components/TaskList.js';
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const App = () => {
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: 'Mow the lawn',
-      isComplete: false,
-    },
-    {
-      id: 2,
-      title: 'Cook Pasta',
-      isComplete: true,
-    },
-  ]);
+  const [tasks, setTasks] = useState([]);
+
+  const URL = 'https://task-list-api-c17.herokuapp.com/tasks';
+
+  useEffect(() => {
+    axios
+      .get(URL)
+      .then((res) => {
+        const newTasks = res.data.map((task) => {
+          return {
+            id: task.id,
+            title: task.title,
+            description: task.description,
+            isComplete: task.isComplete,
+            taskFinished: task.taskFinished,
+            deleteTaskCallback: task.deleteTaskCallback,
+          };
+        });
+        setTasks(newTasks);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   const flipComplete = (id) => {
-    for (const task of tasks) {
-      if (task.id === id) {
-        task.isComplete = !task.isComplete;
-      }
-    }
-    const newTasks = [...tasks];
-    setTasks(newTasks);
+    axios
+      .patch(`${URL}/${id}/mark_complete`)
+      .then(() => {
+        const newTasks = [];
+        for (const task of tasks) {
+          const newTask = { ...task };
+          if (newTask.id === id) {
+            newTask.isComplete = !newTask.isComplete;
+          }
+          newTasks.push(newTask);
+        }
+        setTasks(newTasks);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const deleteTask = (id) => {
-    const newTasks = tasks.filter((task) => task.id !== id);
-    setTasks(newTasks);
+    axios
+      .delete(`${URL}/${id}`)
+      .then(() => {
+        const newTasks = [];
+        for (const task of tasks) {
+          if (task.id !== id) {
+            newTasks.push(task);
+          }
+        }
+        setTasks(newTasks);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
