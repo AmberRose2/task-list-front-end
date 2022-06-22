@@ -9,17 +9,18 @@ describe('Task', () => {
       <Task
         id={1}
         title={'Test Title'}
+        ƒ
         isComplete={true}
-        onClickCallback={() => {}}
-        onDeleteCallback={() => {}}
+        taskFinished={() => {}}
+        deleteTaskCallback={() => {}}
       />
     );
 
     // Assert
-    expect.skip(screen.getByText('Test Title')).toBeInTheDocument();
+    expect(screen.getByText('Test Title')).toBeInTheDocument();
   });
 
-  test('Runs callbacks when buttons clicked', () => {
+  test.skip('Runs callbacks when buttons clicked', () => {
     // Arrange
     const clickCallback = jest.fn();
     const deleteCallback = jest.fn();
@@ -30,8 +31,8 @@ describe('Task', () => {
         id={42}
         title={'Test Title'}
         isComplete={true}
-        onClickCallback={clickCallback}
-        onDeleteCallback={deleteCallback}
+        taskFinished={clickCallback}
+        deleteTaskCallback={deleteCallback}
       />
     );
 
@@ -53,8 +54,8 @@ describe('Task', () => {
         id={1}
         title={'Test Title'}
         isComplete={true}
-        onClickCallback={() => {}}
-        onDeleteCallback={() => {}}
+        taskFinished={() => {}}
+        deleteTaskCallback={() => {}}
       />
     );
 
@@ -70,8 +71,8 @@ describe('Task', () => {
         id={1}
         title={'Test Title'}
         isComplete={false}
-        onClickCallback={() => {}}
-        onDeleteCallback={() => {}}
+        taskFinished={() => {}}
+        deleteTaskCallback={() => {}}
       />
     );
 
