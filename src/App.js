@@ -3,13 +3,15 @@ import TaskList from './components/TaskList.js';
 import './App.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import TasksForm from './components/TasksForm.js';
+import PropTypes from 'prop-types';
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
 
   const URL = 'https://task-list-api-c17.herokuapp.com/tasks';
 
-  useEffect(() => {
+  const fetchTask = () => {
     axios
       .get(URL)
       .then((res) => {
@@ -28,7 +30,9 @@ const App = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  };
+
+  useEffect(fetchTask, []);
 
   const flipComplete = (id) => {
     axios
@@ -66,8 +70,19 @@ const App = () => {
       });
   };
 
+  const addTask = (taskInfo) => {
+    axios
+      .post(URL, taskInfo)
+      .then((response) => {
+        fetchTask();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
-    <div className="App">
+    <div>
       <header className="App-header">
         <h1>Ada&apos;s Task List</h1>
       </header>
@@ -80,10 +95,15 @@ const App = () => {
               deleteTaskCallback={deleteTask}
             />
           }
+          <TasksForm addTaskCallBack={addTask} />
         </div>
       </main>
     </div>
   );
+};
+
+App.propsTypes = {
+  addTaskCallBack: PropTypes.func.isRequired,
 };
 
 export default App;
